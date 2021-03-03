@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from openpyxl import Workbook
 
+
 def getLastPage() :
     req = requests.get(URL + '&start=99999')
     soup = BeautifulSoup(req.text, 'html.parser')
