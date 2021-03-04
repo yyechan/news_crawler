@@ -70,7 +70,7 @@ class NewsCrawler:
                     print(e)
                     continue
 
-                driver.get(url) # 기사 반응은 실시간으로 렌더링 되므로 새로운 url으로 json을 받아옴 
+                driver.get(url) # 셀레니움을 이용한 크롤링 
                 reaction1 = driver.find_element_by_css_selector('#spiLayer > div._reactionModule.u_likeit > ul > li.u_likeit_list.good > a > span.u_likeit_list_count._count').text    
                 reaction2 = driver.find_element_by_css_selector('#spiLayer > div._reactionModule.u_likeit > ul > li.u_likeit_list.warm > a > span.u_likeit_list_count._count').text
                 reaction3 = driver.find_element_by_css_selector('#spiLayer > div._reactionModule.u_likeit > ul > li.u_likeit_list.sad > a > span.u_likeit_list_count._count').text
