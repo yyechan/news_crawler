@@ -8,12 +8,12 @@ from openpyxl import Workbook
 class NewsCrawler:
 
     def __init__(self):
-        self.keyword      = '비트코인'
-        self.startDate    = '2021.01.01'
-        self.endDate      = '2021.01.30'
+        self.keyword      = ''
+        self.startDate    = ''
+        self.endDate      = ''
         self.pattern      = "https:\/\/news\.naver\.com\/main\/read\.nhn\?" # 정규 표현식 매칭을 위한 패턴
-        self.chromedriver = "C:/webs/chromedriver.exe"
         self.count        = 0
+        self.max_count    = 0
 
     def getLastPage(self,URL) :
         req = requests.get(URL + '&start=99999')
@@ -48,6 +48,11 @@ class NewsCrawler:
 
     def start(self) :
 
+        self.keyword = input('키워드를 입력하세요 : ')
+        self.startDate = input('시작 기간을 입력하세요 YYYY.MM.DD : ')
+        self.endDate = input('종료 기간을 입력하세요 YYYY.MM.DD : ')
+        self.max_count = int(input('원하는 기사 개수를 입력하세요 : '))
+
         wb = Workbook() 
         sheet1 = wb.active
         sheet1.append(['뉴스 제목','내용','언론사','URL','발행 일자','기자명','키워드','좋아요','훈훈해요','슬퍼요','화나요','후속기사 원해요'])
@@ -55,8 +60,6 @@ class NewsCrawler:
         URL = self.getURL()
 
         lastPage = self.getLastPage(URL)
-        
-        lastPage = 10
 
         for n in range(lastPage) : # 한 페이지당 약 10개의 기사 리스트 출력
 
@@ -78,6 +81,7 @@ class NewsCrawler:
                     content   = soup.select_one('#articleBodyContents').text
                     reporter  = self.getReporterName(content)
 
+
                      # 기사 반응은 실시간으로 렌더링 되므로 새로운 url으로 json을 받아옴 
                     url_cid   = soup.select_one('#spiLayer > div._reactionModule.u_likeit').attrs['data-cid']
                     reactions = self.getReaction(url_cid)
@@ -93,6 +97,9 @@ class NewsCrawler:
                 wb.save('test1.xlsx')
                 self.count += 1
                 print( str(self.count) + ' arcticles complete...' )
+
+                if self.max_count == self.count :
+                    return
 
         
 if __name__ == "__main__":
