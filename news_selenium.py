@@ -56,16 +56,16 @@ class NewsCrawler:
             results = soup.find_all('a', {'href' : re.compile(self.pattern)}) # 기사 중 네이버 뉴스 URL만 가져옴 
 
             for result in results: # URL을 가져와서 기사 크롤링 
-                req=requests.get(result['href'],headers={'User-Agent':'Mozilla/5.0'}) # 차단을 막기 위해 헤더 추가
+                req = requests.get(result['href'], headers={'User-Agent':'Mozilla/5.0'}) # 차단을 막기 위해 헤더 추가
                 soup = BeautifulSoup(req.text,'html.parser')
                 
                 try :
-                    url       = result['href']
-                    title     = soup.select_one('#articleTitle').text
-                    press     = soup.select_one('#main_content > div.article_header > div.press_logo > a > img')['title']
-                    date      = soup.select_one('span.t11').text
-                    content   = soup.select_one('#articleBodyContents').text
-                    reporter  = self.getReporterName(content)
+                    url = result['href']
+                    title = soup.select_one('#articleTitle').text
+                    press = soup.select_one('#main_content > div.article_header > div.press_logo > a > img')['title']
+                    date = soup.select_one('span.t11').text
+                    content = soup.select_one('#articleBodyContents').text
+                    reporter = self.getReporterName(content)
                 except Exception as e : 
                     print(e)
                     continue
@@ -77,7 +77,12 @@ class NewsCrawler:
                 reaction4 = driver.find_element_by_css_selector('#spiLayer > div._reactionModule.u_likeit > ul > li.u_likeit_list.angry > a > span.u_likeit_list_count._count').text
                 reaction5 = driver.find_element_by_css_selector('#spiLayer > div._reactionModule.u_likeit > ul > li.u_likeit_list.want > a > span.u_likeit_list_count._count').text
                 
-                sheet1.append([title,content,press,url,date,reporter,self.keyword,reaction1,reaction2,reaction3,reaction4,reaction5])
+                sheet1.append([
+                    title, content, press, url,
+                    date, reporter, self.keyword,
+                    reaction1, reaction2, reaction3,
+                    reaction4, reaction5,
+                ])
                 wb.save('test1.xlsx')
                 self.count += 1
                 print( str(self.count) + ' arcticles complete...' )
